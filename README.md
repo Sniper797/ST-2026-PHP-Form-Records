@@ -141,7 +141,21 @@ Each status cell carries `id="status-<record id>"`, which is how the script find
 
 All files are uploaded through the InfinityFree **File Manager** into `htdocs/`, the web root for the domain.
 
-![InfinityFree file manager showing the uploaded files in htdocs](docs/file-manager.png)
+---
+
+## The result
+
+Filling in the form — `Khaled`, `27` — with two records already stored:
+
+![The form filled in with Khaled and 27, above a table of two records](docs/form-filled.png)
+
+After submitting, `InsertData.php` redirects back and the new record is row 3, with `status` defaulting to `0`, then toggled to `1`:
+
+![The records table now showing three rows, Khaled with status 1](docs/hero.png)
+
+Clicking **Toggle** on row 3 flips it straight back to `0` — the cell changes on its own, with no page reload and nothing else on the page moving:
+
+![The same table with Khaled's status now 0](docs/after-toggle.png)
 
 ---
 
