@@ -4,7 +4,8 @@ A PHP + MySQL web page: submit a **name** and **age** through a one-line form, s
 
 ![The form, records table and toggle buttons running on InfinityFree](docs/hero.png)
 
-> 🔗 **Live site:** https://websitetest.infinityfree.io
+> 🔗 **Live page:** **https://websitetest.infinityfree.io/index.php**
+> *(`https://websitetest.infinityfree.io` on its own works too — `index.php` is the default document)*
 > *(hosted free on [InfinityFree](https://infinityfree.com) — the first load runs a JavaScript bot-check and reloads the page with `?i=1`. If you get a blank white page, hard-refresh with `Ctrl+Shift+R` or disable your ad blocker for the domain — an ad blocker stops that script and the page never appears.)*
 
 ---
