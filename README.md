@@ -22,10 +22,6 @@ From the Smart Methods brief:
 | 5 | Add a toggle button for each record to switch the status value between `0` and `1` | button in `index.php`, update in `ToggleStatus.php` |
 | 6 | Reflect the updated status immediately on the webpage after toggling | `index.php` — `fetch()`, no reload |
 
-The target layout — a one-line form, the records table underneath, a Toggle button on every row:
-
-![Target layout from the task brief](docs/task-brief.png)
-
 ---
 
 ## 2. How it works
@@ -83,6 +79,10 @@ Full SQL is in [`schema.sql`](schema.sql). The `status` column must exist before
 ```sql
 ALTER TABLE `user` ADD status TINYINT(1) NOT NULL DEFAULT 0;
 ```
+
+The same records, seen directly in phpMyAdmin — this is what the web page is reading:
+
+![phpMyAdmin browsing the user table, showing three rows with the status column](docs/database-rows.png)
 
 ---
 
@@ -147,7 +147,9 @@ Each status cell carries `id="status-<record id>"`, which is how the script find
 
 ### Hosting
 
-All files are uploaded through the InfinityFree **File Manager** into `htdocs/`, the web root for the domain.
+All three PHP files are uploaded through the InfinityFree **File Manager** into `htdocs/`, the web root for the domain.
+
+![InfinityFree File Manager showing index.php, InsertData.php and ToggleStatus.php in htdocs](docs/file-manager.png)
 
 ---
 
