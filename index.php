@@ -101,7 +101,9 @@ $result = $conn->query($sql);
         $id = $row["id"];
         echo "<tr>";
         echo "<td>" . $id           . "</td>";
-        echo "<td>" . $row["name"]  . "</td>";
+        // htmlspecialchars: a name containing < or > would otherwise be read
+        // as HTML and break the table (or run as a script).
+        echo "<td>" . htmlspecialchars($row["name"], ENT_QUOTES, 'UTF-8') . "</td>";
         echo "<td>" . $row["age"]   . "</td>";
         // the id on this cell is how JavaScript finds it again after toggling
         echo "<td id='status-" . $id . "'>" . $row["status"] . "</td>";

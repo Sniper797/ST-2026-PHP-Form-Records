@@ -19,7 +19,7 @@ From the Smart Methods brief:
 | 2 | Create a **one-line** form that includes name, age and a submit button | `index.php` — CSS flexbox |
 | 3 | Store the submitted data into a MySQL database table | `InsertData.php` |
 | 4 | Display all records from the table in a table below the form | `index.php` — `SELECT` + `while` loop |
-| 5 | Add a toggle button for each record to switch the status value between `0` and `1` | `ToggleStatus.php` |
+| 5 | Add a toggle button for each record to switch the status value between `0` and `1` | button in `index.php`, update in `ToggleStatus.php` |
 | 6 | Reflect the updated status immediately on the webpage after toggling | `index.php` — `fetch()`, no reload |
 
 The target layout — a one-line form, the records table underneath, a Toggle button on every row:
@@ -122,18 +122,26 @@ $sql = "UPDATE `user` SET status = 1 - status WHERE id = '$id'";
 `ToggleStatus.php` replies with JSON rather than a web page:
 
 ```json
-{ "ok": true, "status": 1 }
+{ "ok": true, "status": "1" }
 ```
+
+(`status` comes back as a string — mysqli returns column values as strings unless native types are enabled. It is written straight into the cell as text, so this makes no difference here.)
 
 JavaScript in `index.php` sends the click, waits for that reply, and rewrites only the one cell it belongs to:
 
 ```js
-fetch('ToggleStatus.php', { method: 'POST', body: 'id=' + id })
-  .then(r => r.json())
+fetch('ToggleStatus.php', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+  body: 'id=' + encodeURIComponent(id)
+})
+  .then(response => response.json())
   .then(data => {
     document.getElementById('status-' + id).textContent = data.status;
   });
 ```
+
+The `Content-Type` header is not optional. Without it PHP never fills `$_POST`, so `ToggleStatus.php` would receive no id at all.
 
 Each status cell carries `id="status-<record id>"`, which is how the script finds the right one. The value written to the page is the value read back **from the database**, not a guess made in the browser — so what you see is always what is actually stored.
 
@@ -165,7 +173,8 @@ Known rough edges, listed honestly rather than hidden:
 
 - **The credentials are written directly in all three PHP files.** Deliberate — this is a throwaway demo database on free hosting and the task is about showing the code plainly. A production project would keep them in one separate file excluded from git, or in environment variables. It also means changing the password requires editing three places.
 - **The SQL is built by string interpolation**, so it is open to SQL injection. The correct fix is `$conn->prepare()` with bound parameters.
-- **No input validation** — submitting the form empty inserts an empty row.
+- **No input validation** — submitting the form with both fields blank still inserts an empty row. (Opening `InsertData.php` directly no longer does: it now checks for a real POST and bounces back to the form.)
+- **Output *is* escaped.** Names are passed through `htmlspecialchars()` before being printed into the table, so a name containing `<` or `>` cannot break the table layout or run as script. This is separate from the SQL point above — that one concerns data going *in*, this one data coming *out*.
 - **No delete or edit.** Records can only be added and toggled, which is all the brief asks for.
 - **The toggle needs JavaScript.** With JS disabled the table still displays correctly, but the button does nothing.
 

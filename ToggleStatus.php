@@ -17,7 +17,12 @@ if ($conn->connect_error) {
   exit;
 }
 
-$id = $_POST['id'];
+$id = $_POST['id'] ?? '';
+
+if ($id === '') {
+  echo json_encode(["ok" => false, "error" => "No record id was sent"]);
+  exit;
+}
 
 // `1 - status` flips 0 into 1 and 1 into 0 inside MySQL itself,
 // so we never have to read the old value first.
@@ -27,7 +32,13 @@ if ($conn->query($sql) === TRUE) {
   // Read the new value back so the page shows what is really stored
   $result = $conn->query("SELECT status FROM `user` WHERE id = '$id'");
   $row = $result->fetch_assoc();
-  echo json_encode(["ok" => true, "status" => $row["status"]]);
+
+  if ($row === null) {
+    // The UPDATE "succeeded" but matched no rows, so this id does not exist.
+    echo json_encode(["ok" => false, "error" => "No record with id $id"]);
+  } else {
+    echo json_encode(["ok" => true, "status" => $row["status"]]);
+  }
 } else {
   echo json_encode(["ok" => false, "error" => $conn->error]);
 }
