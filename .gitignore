@@ -1,0 +1,7 @@
+# --- Database credentials (NEVER commit — this repo is public) ---
+db.php
+
+# --- OS junk ---
+Thumbs.db
+.DS_Store
+desktop.ini
