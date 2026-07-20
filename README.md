@@ -1,4 +1,4 @@
-# ST-2026 · Form → Table
+# ST-2026 · PHP Form Records
 
 A small PHP + MySQL web app: submit a **name** and **age** through a one-line form, store them in a MySQL database, and list every record in a table below the form — each row with a **toggle button** that flips its status between `0` and `1`. Third application task of the Smart Methods (ST 2026) training.
 
