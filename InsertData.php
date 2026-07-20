@@ -15,7 +15,7 @@ if ($conn->connect_error) {
 }
 
 // Step 3: store the submitted data. status starts at 0.
-$sql = "INSERT INTO MyGuests (name, age, status)
+$sql = "INSERT INTO `user` (name, age, status)
 VALUES ('$name', '$age', 0)";
 
 if ($conn->query($sql) === TRUE) {

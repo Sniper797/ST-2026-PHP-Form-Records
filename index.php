@@ -12,7 +12,7 @@ if ($conn->connect_error) {
 }
 
 // Read every record back out of the table
-$sql = "SELECT id, name, age, status FROM MyGuests ORDER BY id";
+$sql = "SELECT id, name, age, status FROM `user` ORDER BY id";
 $result = $conn->query($sql);
 ?>
 <!DOCTYPE html>

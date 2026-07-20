@@ -20,6 +20,8 @@ From the Smart Methods brief:
 | 3 | Store the submitted data into a MySQL database table | ✅ done |
 | 4 | Display all records from the table in a table below the form | ✅ done |
 
+> The first version of this code queried a table called `MyGuests` — the name straight out of the W3Schools example. The actual table in the database is `user`, so nothing was ever inserted or read until that was corrected.
+
 The target layout — a one-line form, with the records table underneath:
 
 ![Target layout from the task brief](docs/task-brief.png)
@@ -40,12 +42,12 @@ Two PHP files and one database table:
                                  ▼
                   ┌──────────────────────────────┐
                   │  InsertData.php              │
-                  │  · INSERT into MyGuests      │
+                  │  · INSERT into `user`        │
                   │  · redirect back to index    │
                   └──────────────┬───────────────┘
                                  │
                                  ▼
-                        MySQL · MyGuests
+                          MySQL · `user`
 ```
 
 Submitting the form sends the values to `InsertData.php`, which writes the row and redirects straight back to `index.php`. Because `index.php` re-runs its `SELECT` on every load, the new record is already in the table when the page comes back.
@@ -58,14 +60,16 @@ A `.html` file is sent to the browser exactly as written — the server never ru
 
 ## 3. The database
 
-The table is `MyGuests`, in the database `if0_42446707_myfrist`:
+The table is `user`, in the database `if0_42446707_myfrist`:
 
 | Column | Type | Notes |
 |---|---|---|
-| `id` | `INT AUTO_INCREMENT` | primary key — MySQL assigns it, never sent by the form |
-| `name` | `VARCHAR(30)` | from the form |
-| `age` | `INT(3)` | from the form |
-| `status` | `TINYINT(1)` | defaults to `0` on insert |
+| `id` | `INT(11) AUTO_INCREMENT` | primary key — MySQL assigns it, never sent by the form |
+| `name` | `VARCHAR(255)` | from the form |
+| `age` | `INT(11)` | from the form |
+| `status` | `TINYINT(1)` | added by `schema.sql`; defaults to `0` |
+
+`user` is written in **backticks** in every query — `` `user` `` — because `USER` is a reserved word in MySQL and the query fails without them.
 
 Full SQL is in [`schema.sql`](schema.sql). Run it once in **phpMyAdmin** (InfinityFree panel → *MySQL Databases* → *Admin*) before using the page — the `status` column has to exist or both PHP files will error.
 
@@ -90,7 +94,7 @@ form {
 The `SELECT` runs at the top of `index.php`, before any HTML is sent, then `while ($row = $result->fetch_assoc())` prints one `<tr>` per record:
 
 ```php
-$sql = "SELECT id, name, age, status FROM MyGuests ORDER BY id";
+$sql = "SELECT id, name, age, status FROM `user` ORDER BY id";
 $result = $conn->query($sql);
 ```
 
@@ -133,7 +137,7 @@ Known rough edges, listed honestly rather than hidden:
 | Host | InfinityFree — `websitetest.infinityfree.io` |
 | Web root | `htdocs/` |
 | Database | `if0_42446707_myfrist` |
-| Table | `MyGuests` — `id`, `name`, `age`, `status` |
+| Table | `user` — `id`, `name`, `age`, `status` |
 
 ---
 
